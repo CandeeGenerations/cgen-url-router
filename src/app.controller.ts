@@ -17,8 +17,13 @@ export class AppController {
   @Inject('ILogger')
   logger: ILogger
 
+  @Get()
+  @Redirect(process.env.BASE_URL, 301)
+  load() {
+    return {url: process.env.BASE_URL}
+  }
+
   @Get(':shortCode')
-  @Redirect(process.env.BASE_URL, 302)
   async getRedirectUrl(
     @Param('shortCode') shortCode: string,
     @Req() req: Request,
