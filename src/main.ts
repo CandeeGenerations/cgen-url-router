@@ -1,3 +1,4 @@
+import {join} from 'path'
 import * as dotenv from 'dotenv'
 import {NestFactory} from '@nestjs/core'
 
@@ -14,6 +15,10 @@ async function bootstrap() {
   })
   const log = app.get<ILogger>('ILogger')
   const port = app.get('ConfigService').get('PORT') || 3002
+
+  app.useStaticAssets(join(__dirname, '..', 'public'))
+  app.setBaseViewsDir(join(__dirname, '../src', 'views'))
+  app.setViewEngine('hbs')
 
   app.useLogger(app.get(NEST_LOGGER_NAME))
   app.set('trust proxy', true)

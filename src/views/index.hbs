@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Loading...</title>
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif;">
+  <p>Loading...</p>
+
+  <script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script>
+    const recordClick = (body, routeUrl) => {
+      $.post("/click", body, (data) =>
+        window.location.href = unescape(data.success ? routeUrl : data.url)
+      )
+    }
+
+    $(() => {
+      const success = `{{ success }}` === 'true',
+        url = `{{ url }}`,
+        ipUrl = `{{ ipUrl }}`,
+        id = `{{ id }}`
+
+      if (success) {
+        const data = {
+          urlId: id,
+          userAgent: navigator.userAgent,
+          language: navigator.language || navigator.userLanguage
+        }
+
+        if (ipUrl.length > 0) {
+          $.getJSON(unescape(ipUrl), (result) => {
+            const locationData = {
+              ipAddress: result.ip_address,
+              country: result.country,
+              region: result.region,
+              city: result.city,
+            }
+
+            recordClick({ ...data, ...locationData }, url)
+          });
+        } else {
+          recordClick(data, url)
+        }
+      } else {
+        window.location.href = unescape(url)
+      }
+    })
+  </script>
+</body>
+
+</html>
