@@ -87,7 +87,7 @@ export class AppController {
     try {
       await this.appService.createClick({
         clickedTs: dayjs()
-          .unix()
+          .valueOf()
           .toString(),
         urlId: body.urlId,
         userAgent: body.userAgent || 'Unknown',
