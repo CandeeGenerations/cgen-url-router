@@ -24,6 +24,7 @@ export class AppController {
   }
 
   @Get(':shortCode')
+  @Redirect(process.env.BASE_URL, 302)
   async getRedirectUrl(
     @Param('shortCode') shortCode: string,
     @Req() req: Request,
