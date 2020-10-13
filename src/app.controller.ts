@@ -42,9 +42,9 @@ export class AppController {
   logger: ILogger
 
   @Get()
-  @Redirect(process.env.BASE_URL, 301)
+  @Redirect(process.env.CGEN_URL, 301)
   load() {
-    return {url: process.env.BASE_URL}
+    return {url: process.env.CGEN_URL}
   }
 
   @Get(':shortCode')
