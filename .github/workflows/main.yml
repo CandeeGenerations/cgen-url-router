@@ -1,0 +1,44 @@
+on: [push]
+name: Deploy
+
+jobs:
+  build-and-deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout the repo
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_SENDGRID_KEY: ${{ secrets.SENDGRID_KEY }}
+          envkey_DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+          envkey_DEFAULT_FROM_NAME: ${{ secrets.DEFAULT_FROM_NAME }}
+          envkey_SERVER_URL: ${{ secrets.SERVER_URL }}
+          file_name: .env
+
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/urlrouter:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/urlrouter:${{ github.sha }}
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'cgen-url-router'
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/urlrouter:${{ github.sha }}
+
+      - name: Azure logout
+        run: |
+          az logout
