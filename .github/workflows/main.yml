@@ -24,10 +24,12 @@ jobs:
       - name: Make envfile
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_SENDGRID_KEY: ${{ secrets.SENDGRID_KEY }}
-          envkey_DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
-          envkey_DEFAULT_FROM_NAME: ${{ secrets.DEFAULT_FROM_NAME }}
-          envkey_SERVER_URL: ${{ secrets.SERVER_URL }}
+          envkey_CGEN_URL: ${{ secrets.CGEN_URL }}
+          envkey_BASE_URL: ${{ secrets.BASE_URL }}
+          envkey_GRAPHQL_URL: ${{ secrets.GRAPHQL_URL }}
+          envkey_GRAPHQL_AUTH_KEY: ${{ secrets.GRAPHQL_AUTH_KEY }}
+          envkey_IP_URL: ${{ secrets.IP_URL }}
+          envkey_IP_KEY: ${{ secrets.IP_KEY }}
           file_name: .env
 
       - run: |
